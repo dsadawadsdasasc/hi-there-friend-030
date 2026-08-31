@@ -10,10 +10,10 @@ export const Route = createFileRoute("/produto/$id")({
   }),
   head: ({ params }) => {
     const item = menu.find((m) => m.id === params.id);
-    const title = item ? `${item.name} | Xis do Sul` : "Produto | Xis do Sul";
+    const title = item ? `${item.name} | Cantinho da Gula` : "Produto | Cantinho da Gula";
     const description = item
       ? `${item.description} Monte com adicionais e observações. Delivery 24h em Porto Alegre.`
-      : "Produto não encontrado no cardápio do Xis do Sul.";
+      : "Produto não encontrado no cardápio do Cantinho da Gula.";
     return {
       meta: [
         { title },

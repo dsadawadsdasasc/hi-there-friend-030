@@ -18,13 +18,13 @@ export const Route = createFileRoute("/")({
   }),
   head: () => ({
     meta: [
-      { title: "Xis do Sul | Delivery 24h de xis, pizza, sushi e açaí" },
+      { title: "Cantinho da Gula | Delivery 24h de xis, pizza, sushi e açaí" },
       {
         name: "description",
         content:
           "Delivery aberto 24 horas, 7 dias por semana em Porto Alegre: xis gaúcho, pizza artesanal, barcas de sushi, baurus, bolos e açaí. Frete grátis acima de R$ 60.",
       },
-      { property: "og:title", content: "Xis do Sul | Delivery 24h em Porto Alegre" },
+      { property: "og:title", content: "Cantinho da Gula | Delivery 24h em Porto Alegre" },
       {
         property: "og:description",
         content:
@@ -372,7 +372,7 @@ function Index() {
 
       <footer className="border-t border-border">
         <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Xis do Sul · Porto Alegre / RS · Aberto 24 horas
+          © {new Date().getFullYear()} Cantinho da Gula · Porto Alegre / RS · Aberto 24 horas
         </div>
       </footer>
 
