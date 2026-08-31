@@ -59,6 +59,11 @@ function Index() {
     [cart],
   );
 
+  const itemCount = useMemo(
+    () => cartLines.reduce((n, l) => n + l.qty, 0),
+    [cartLines],
+  );
+
   const subtotal = useMemo(
     () => cartLines.reduce((sum, l) => sum + l.item.price * l.qty, 0),
     [cartLines],
