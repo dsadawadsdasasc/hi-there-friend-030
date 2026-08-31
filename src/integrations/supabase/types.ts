@@ -14,7 +14,101 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      order_items: {
+        Row: {
+          addons: Json
+          created_at: string
+          id: string
+          item_id: string
+          item_name: string
+          notes: string | null
+          order_id: string
+          qty: number
+          unit_price_cents: number
+        }
+        Insert: {
+          addons?: Json
+          created_at?: string
+          id?: string
+          item_id: string
+          item_name: string
+          notes?: string | null
+          order_id: string
+          qty: number
+          unit_price_cents: number
+        }
+        Update: {
+          addons?: Json
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_name?: string
+          notes?: string | null
+          order_id?: string
+          qty?: number
+          unit_price_cents?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          address: string
+          created_at: string
+          customer_name: string
+          customer_phone: string
+          id: string
+          notes: string | null
+          payment_provider: string | null
+          payment_reference: string | null
+          payment_status: string
+          shipping_cents: number
+          status: string
+          subtotal_cents: number
+          total_cents: number
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          customer_name: string
+          customer_phone: string
+          id?: string
+          notes?: string | null
+          payment_provider?: string | null
+          payment_reference?: string | null
+          payment_status?: string
+          shipping_cents?: number
+          status?: string
+          subtotal_cents: number
+          total_cents: number
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          customer_name?: string
+          customer_phone?: string
+          id?: string
+          notes?: string | null
+          payment_provider?: string | null
+          payment_reference?: string | null
+          payment_status?: string
+          shipping_cents?: number
+          status?: string
+          subtotal_cents?: number
+          total_cents?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
