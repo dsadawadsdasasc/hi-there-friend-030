@@ -96,15 +96,23 @@ function Index() {
     <div className="min-h-screen bg-background pb-24 text-foreground">
       <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-          <div>
-            <p className="text-lg font-extrabold leading-none tracking-tight">
-              Xis <span className="text-primary">do Sul</span>
-            </p>
-            <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <button
+            type="button"
+            onClick={() => {
+              setTab("cardapio");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            aria-label="Cantinho da Gula, voltar ao topo do cardápio"
+            className="text-left"
+          >
+            <span className="block text-lg font-extrabold leading-none tracking-tight">
+              Cantinho <span className="text-primary">da Gula</span>
+            </span>
+            <span className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
               <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-accent" />
               Aberto agora · 24 horas, todos os dias
-            </p>
-          </div>
+            </span>
+          </button>
           <button
             type="button"
             onClick={() => setTab("pedido")}
