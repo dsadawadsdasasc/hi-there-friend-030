@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 
 import heroImg from "@/assets/hero.jpg";
 import {
@@ -10,8 +10,12 @@ import {
   type CategoryId,
   type MenuItem,
 } from "@/data/menu";
+import { cart, useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    tab: search["tab"] === "pedido" ? ("pedido" as const) : ("cardapio" as const),
+  }),
   head: () => ({
     meta: [
       { title: "Xis do Sul | Delivery 24h de xis, pizza, sushi e açaí" },
@@ -36,22 +40,6 @@ export const Route = createFileRoute("/")({
 const FREE_SHIPPING_FROM = 60;
 const DELIVERY_FEE = 8;
 
-type CartLine = {
-  lineId: string;
-  itemId: string;
-  qty: number;
-  addonIds: string[];
-  notes: string;
-};
-
-type Draft = {
-  lineId?: string;
-  item: MenuItem;
-  qty: number;
-  addonIds: string[];
-  notes: string;
-};
-
 const filters: { id: CategoryId | "todos"; label: string }[] = [
   { id: "todos", label: "Todos" },
   ...categories.map((c) => ({ id: c.id, label: c.label })),
@@ -64,10 +52,13 @@ const lineUnitPrice = (item: MenuItem, addonIds: string[]) =>
     .reduce((s, a) => s + a.price, 0);
 
 function Index() {
-  const [tab, setTab] = useState<"cardapio" | "pedido">("cardapio");
+  const { tab } = Route.useSearch();
+  const navigate = useNavigate();
   const [active, setActive] = useState<CategoryId | "todos">("todos");
-  const [lines, setLines] = useState<CartLine[]>([]);
-  const [draft, setDraft] = useState<Draft | null>(null);
+  const lines = useCart();
+
+  const setTab = (next: "cardapio" | "pedido") =>
+    navigate({ to: "/", search: { tab: next } });
 
   const visibleItems = useMemo(
     () => (active === "todos" ? menu : menu.filter((i) => i.category === active)),
@@ -89,74 +80,9 @@ function Index() {
     [lines],
   );
 
-  const itemCount = useMemo(
-    () => detailed.reduce((n, d) => n + d.line.qty, 0),
-    [detailed],
-  );
-  const subtotal = useMemo(
-    () => detailed.reduce((s, d) => s + d.total, 0),
-    [detailed],
-  );
+  const itemCount = detailed.reduce((n, d) => n + d.line.qty, 0);
+  const subtotal = detailed.reduce((s, d) => s + d.total, 0);
   const shipping = subtotal === 0 || subtotal >= FREE_SHIPPING_FROM ? 0 : DELIVERY_FEE;
-
-  const openNew = useCallback((item: MenuItem) => {
-    setDraft({ item, qty: 1, addonIds: [], notes: "" });
-  }, []);
-
-  const openEdit = useCallback((line: CartLine, item: MenuItem) => {
-    setDraft({
-      lineId: line.lineId,
-      item,
-      qty: line.qty,
-      addonIds: line.addonIds,
-      notes: line.notes,
-    });
-  }, []);
-
-  const saveDraft = useCallback(() => {
-    if (!draft) return;
-    setLines((prev) => {
-      if (draft.lineId) {
-        return prev.map((l) =>
-          l.lineId === draft.lineId
-            ? { ...l, qty: draft.qty, addonIds: draft.addonIds, notes: draft.notes }
-            : l,
-        );
-      }
-      return [
-        ...prev,
-        {
-          lineId: `${draft.item.id}-${Date.now()}`,
-          itemId: draft.item.id,
-          qty: draft.qty,
-          addonIds: draft.addonIds,
-          notes: draft.notes,
-        },
-      ];
-    });
-    setDraft(null);
-  }, [draft]);
-
-  const changeQty = useCallback((lineId: string, delta: number) => {
-    setLines((prev) =>
-      prev.flatMap((l) => {
-        if (l.lineId !== lineId) return [l];
-        const qty = l.qty + delta;
-        return qty <= 0 ? [] : [{ ...l, qty }];
-      }),
-    );
-  }, []);
-
-  const removeLine = useCallback((lineId: string) => {
-    setLines((prev) => prev.filter((l) => l.lineId !== lineId));
-  }, []);
-
-  useEffect(() => {
-    if (!draft) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setDraft(null);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [draft]);
 
   return (
     <div className="min-h-screen bg-background pb-24 text-foreground">
@@ -200,7 +126,6 @@ function Index() {
           </button>
         </div>
 
-        {/* Abas principais */}
         <div className="mx-auto flex max-w-6xl gap-1 px-4">
           {(
             [
@@ -228,7 +153,6 @@ function Index() {
       <main>
         {tab === "cardapio" ? (
           <>
-            {/* Hero */}
             <section className="relative">
               <img
                 src={heroImg}
@@ -255,11 +179,11 @@ function Index() {
               </div>
             </section>
 
-            {/* Cardápio */}
             <section className="mx-auto max-w-6xl px-4 py-8">
               <h2 className="text-2xl font-bold tracking-tight md:text-3xl">Cardápio</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Toque em um produto para escolher adicionais e observações.
+                Toque em um produto para abrir a página dele e escolher adicionais e
+                observações.
               </p>
 
               <div className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1">
@@ -283,9 +207,10 @@ function Index() {
               <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {visibleItems.map((item) => (
                   <li key={item.id}>
-                    <button
-                      type="button"
-                      onClick={() => openNew(item)}
+                    <Link
+                      to="/produto/$id"
+                      params={{ id: item.id }}
+                      search={{ line: undefined }}
                       className="flex h-full w-full flex-col rounded-2xl border border-border bg-card p-5 text-left transition-colors hover:border-primary"
                     >
                       <span className="text-xs uppercase tracking-widest text-accent">
@@ -301,13 +226,12 @@ function Index() {
                           Personalizar
                         </span>
                       </div>
-                    </button>
+                    </Link>
                   </li>
                 ))}
               </ul>
             </section>
 
-            {/* Entrega */}
             <section className="mx-auto max-w-6xl px-4 pb-16">
               <div className="grid gap-4 md:grid-cols-3">
                 {[
@@ -324,7 +248,6 @@ function Index() {
             </section>
           </>
         ) : (
-          /* Aba do pedido */
           <section className="mx-auto max-w-3xl px-4 py-8">
             <h2 className="text-2xl font-bold tracking-tight">Seu pedido</h2>
             {detailed.length === 0 ? (
@@ -365,7 +288,7 @@ function Index() {
                         <button
                           type="button"
                           aria-label={`Diminuir ${item.name}`}
-                          onClick={() => changeQty(line.lineId, -1)}
+                          onClick={() => cart.changeQty(line.lineId, -1)}
                           className="h-8 w-8 rounded-full border border-border hover:bg-secondary"
                         >
                           −
@@ -374,21 +297,22 @@ function Index() {
                         <button
                           type="button"
                           aria-label={`Aumentar ${item.name}`}
-                          onClick={() => changeQty(line.lineId, 1)}
+                          onClick={() => cart.changeQty(line.lineId, 1)}
                           className="h-8 w-8 rounded-full border border-border hover:bg-secondary"
                         >
                           +
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => openEdit(line, item)}
+                        <Link
+                          to="/produto/$id"
+                          params={{ id: item.id }}
+                          search={{ line: line.lineId }}
                           className="ml-auto text-sm font-semibold text-primary"
                         >
                           Editar
-                        </button>
+                        </Link>
                         <button
                           type="button"
-                          onClick={() => removeLine(line.lineId)}
+                          onClick={() => cart.remove(line.lineId)}
                           className="text-sm text-muted-foreground hover:text-foreground"
                         >
                           Remover
@@ -430,8 +354,7 @@ function Index() {
         </div>
       </footer>
 
-      {/* Mini aba do pedido */}
-      {itemCount > 0 && !draft && (
+      {itemCount > 0 && (
         <button
           type="button"
           onClick={() => setTab(tab === "pedido" ? "cardapio" : "pedido")}
@@ -445,115 +368,6 @@ function Index() {
             {tab === "pedido" ? "Continuar comprando" : "Ver pedido"}
           </span>
         </button>
-      )}
-
-      {/* Aba de especificações do produto */}
-      {draft && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Personalizar ${draft.item.name}`}
-            className="max-h-[90vh] w-full overflow-y-auto rounded-t-3xl border border-border bg-card p-5 sm:max-w-lg sm:rounded-3xl"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h3 className="text-xl font-bold">{draft.item.name}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {draft.item.description}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setDraft(null)}
-                aria-label="Fechar"
-                className="h-9 w-9 shrink-0 rounded-full border border-border text-lg leading-none"
-              >
-                ×
-              </button>
-            </div>
-
-            <h4 className="mt-6 text-sm font-semibold uppercase tracking-widest text-accent">
-              Adicionais
-            </h4>
-            <ul className="mt-2 space-y-1">
-              {addonsByCategory[draft.item.category].map((a) => {
-                const checked = draft.addonIds.includes(a.id);
-                return (
-                  <li key={a.id}>
-                    <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-border px-3 py-2.5">
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() =>
-                          setDraft((d) =>
-                            d
-                              ? {
-                                  ...d,
-                                  addonIds: checked
-                                    ? d.addonIds.filter((x) => x !== a.id)
-                                    : [...d.addonIds, a.id],
-                                }
-                              : d,
-                          )
-                        }
-                        className="h-4 w-4 accent-[var(--color-primary)]"
-                      />
-                      <span className="flex-1 text-sm">{a.name}</span>
-                      <span className="text-sm font-semibold">+ {formatBRL(a.price)}</span>
-                    </label>
-                  </li>
-                );
-              })}
-            </ul>
-
-            <h4 className="mt-6 text-sm font-semibold uppercase tracking-widest text-accent">
-              Observações
-            </h4>
-            <textarea
-              value={draft.notes}
-              onChange={(e) =>
-                setDraft((d) => (d ? { ...d, notes: e.target.value } : d))
-              }
-              rows={3}
-              maxLength={200}
-              placeholder="Ex.: sem cebola, maionese à parte, ponto da carne..."
-              className="mt-2 w-full rounded-xl border border-border bg-background p-3 text-sm outline-none focus:border-primary"
-            />
-
-            <div className="mt-6 flex items-center gap-3">
-              <div className="flex items-center gap-3 rounded-full border border-border px-3 py-2">
-                <button
-                  type="button"
-                  aria-label="Diminuir quantidade"
-                  onClick={() =>
-                    setDraft((d) => (d ? { ...d, qty: Math.max(1, d.qty - 1) } : d))
-                  }
-                  className="text-lg leading-none"
-                >
-                  −
-                </button>
-                <span className="w-5 text-center tabular-nums">{draft.qty}</span>
-                <button
-                  type="button"
-                  aria-label="Aumentar quantidade"
-                  onClick={() => setDraft((d) => (d ? { ...d, qty: d.qty + 1 } : d))}
-                  className="text-lg leading-none"
-                >
-                  +
-                </button>
-              </div>
-              <button
-                type="button"
-                onClick={saveDraft}
-                className="flex-1 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground"
-              >
-                {draft.lineId ? "Salvar alterações" : "Adicionar"} ·{" "}
-                {formatBRL(lineUnitPrice(draft.item, draft.addonIds) * draft.qty)}
-              </button>
-            </div>
-          </div>
-        </div>
       )}
     </div>
   );
