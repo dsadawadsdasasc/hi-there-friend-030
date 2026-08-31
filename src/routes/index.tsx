@@ -3,9 +3,9 @@ import { useMemo, useState } from "react";
 
 import heroImg from "@/assets/hero.jpg";
 import {
-  addonsByCategory,
   categories,
   formatBRL,
+  getAddons,
   menu,
   type CategoryId,
   type MenuItem,
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const FREE_SHIPPING_FROM = 60;
+const FREE_SHIPPING_FROM = 119.9;
 const DELIVERY_FEE = 8;
 
 const filters: { id: CategoryId | "todos"; label: string }[] = [
@@ -47,7 +47,7 @@ const filters: { id: CategoryId | "todos"; label: string }[] = [
 
 const lineUnitPrice = (item: MenuItem, addonIds: string[]) =>
   item.price +
-  addonsByCategory[item.category]
+  getAddons(item.category)
     .filter((a) => addonIds.includes(a.id))
     .reduce((s, a) => s + a.price, 0);
 
@@ -60,8 +60,16 @@ function Index() {
   const setTab = (next: "cardapio" | "pedido") =>
     navigate({ to: "/", search: { tab: next } });
 
-  const visibleItems = useMemo(
-    () => (active === "todos" ? menu : menu.filter((i) => i.category === active)),
+  const groups = useMemo(
+    () =>
+      categories
+        .filter((c) => active === "todos" || c.id === active)
+        .map((c) => ({
+          id: c.id,
+          label: c.label,
+          items: menu.filter((i) => i.category === c.id),
+        }))
+        .filter((g) => g.items.length > 0),
     [active],
   );
 
@@ -71,7 +79,7 @@ function Index() {
         .map((l) => {
           const item = menu.find((m) => m.id === l.itemId);
           if (!item) return null;
-          const addons = addonsByCategory[item.category].filter((a) =>
+          const addons = getAddons(item.category).filter((a) =>
             l.addonIds.includes(a.id),
           );
           return { line: l, item, addons, total: lineUnitPrice(item, l.addonIds) * l.qty };
@@ -172,8 +180,7 @@ function Index() {
                     Xis, pizza, barca de sushi e bolo na sua porta, a qualquer hora.
                   </h1>
                   <p className="mt-3 max-w-xl text-sm text-muted-foreground md:text-lg">
-                    Cozinha aberta 24 horas por dia, 7 dias por semana. Frete grátis
-                    acima de {formatBRL(FREE_SHIPPING_FROM)}.
+                    Cozinha aberta 24 horas por dia, 7 dias por semana. Frete grátis acima de {formatBRL(FREE_SHIPPING_FROM)}.
                   </p>
                 </div>
               </div>
@@ -186,14 +193,14 @@ function Index() {
                 observações.
               </p>
 
-              <div className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1">
+              <div className="mt-4 grid grid-cols-3 gap-2 sm:flex sm:flex-wrap">
                 {filters.map((f) => (
                   <button
                     key={f.id}
                     type="button"
                     onClick={() => setActive(f.id)}
                     aria-pressed={active === f.id}
-                    className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                    className={`truncate rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors sm:rounded-full sm:px-4 ${
                       active === f.id
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-border text-muted-foreground hover:text-foreground"
@@ -204,32 +211,40 @@ function Index() {
                 ))}
               </div>
 
-              <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {visibleItems.map((item) => (
-                  <li key={item.id}>
-                    <Link
-                      to="/produto/$id"
-                      params={{ id: item.id }}
-                      search={{ line: undefined }}
-                      className="flex h-full w-full flex-col rounded-2xl border border-border bg-card p-5 text-left transition-colors hover:border-primary"
-                    >
-                      <span className="text-xs uppercase tracking-widest text-accent">
-                        {categories.find((c) => c.id === item.category)?.label}
-                      </span>
-                      <h3 className="mt-2 font-semibold">{item.name}</h3>
-                      <p className="mt-1 flex-1 text-sm text-muted-foreground">
-                        {item.description}
-                      </p>
-                      <div className="mt-4 flex items-center justify-between">
-                        <span className="text-lg font-bold">{formatBRL(item.price)}</span>
-                        <span className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
-                          Personalizar
-                        </span>
-                      </div>
-                    </Link>
-                  </li>
+              <div className="mt-6 space-y-8">
+                {groups.map((group) => (
+                  <div key={group.id}>
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-accent">
+                      {group.label}
+                    </h3>
+                    <ul className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                      {group.items.map((item) => (
+                        <li key={item.id}>
+                          <Link
+                            to="/produto/$id"
+                            params={{ id: item.id }}
+                            search={{ line: undefined }}
+                            className="grid h-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 transition-colors hover:border-primary"
+                          >
+                            <span className="min-w-0">
+                              <span className="block truncate font-semibold">{item.name}</span>
+                              <span className="mt-0.5 line-clamp-2 block text-xs text-muted-foreground">
+                                {item.description}
+                              </span>
+                              <span className="mt-1 block text-sm font-bold">
+                                {formatBRL(item.price)}
+                              </span>
+                            </span>
+                            <span className="shrink-0 rounded-full bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground">
+                              Montar
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </section>
 
             <section className="mx-auto max-w-6xl px-4 pb-16">
@@ -338,9 +353,16 @@ function Index() {
                 </dl>
                 <button
                   type="button"
-                  className="mt-5 w-full rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                  onClick={() => setTab("cardapio")}
+                  className="mt-5 w-full rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
                 >
-                  Finalizar pedido no WhatsApp
+                  + Adicionar mais itens
+                </button>
+                <button
+                  type="button"
+                  className="mt-3 w-full rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                >
+                  Finalizar pedido
                 </button>
               </div>
             )}

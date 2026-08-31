@@ -2,7 +2,7 @@ import xisImg from "@/assets/cat-xis.jpg";
 import pizzaImg from "@/assets/cat-pizza.jpg";
 import acaiImg from "@/assets/cat-acai.jpg";
 import sushiImg from "@/assets/cat-sushi.jpg";
-import bauruImg from "@/assets/cat-bauru.jpg";
+import burgerImg from "@/assets/cat-burger.jpg";
 import boloImg from "@/assets/cat-bolo.jpg";
 
 export type CategoryId =
@@ -10,7 +10,7 @@ export type CategoryId =
   | "pizzas"
   | "acai"
   | "sushi"
-  | "baurus"
+  | "hamburgueres"
   | "bolos";
 
 export type Addon = { id: string; name: string; price: number };
@@ -33,7 +33,7 @@ export const categories: {
   { id: "pizzas", label: "Pizzas", image: pizzaImg, blurb: "Massa artesanal fermentada 48h." },
   { id: "acai", label: "Açaí", image: acaiImg, blurb: "Cremoso, batido na hora." },
   { id: "sushi", label: "Barcas de sushi", image: sushiImg, blurb: "Peças frescas montadas na hora." },
-  { id: "baurus", label: "Baurus", image: bauruImg, blurb: "Clássico no pão francês tostado." },
+  { id: "hamburgueres", label: "Hambúrgueres", image: burgerImg, blurb: "Blend 180g na chapa, pão brioche." },
   { id: "bolos", label: "Bolos", image: boloImg, blurb: "Fatia ou inteiro, feitos na casa." },
 ];
 
@@ -63,11 +63,11 @@ export const menu: MenuItem[] = [
   { id: "barca-60", name: "Barca 60 peças", description: "Salmão, atum, camarão empanado e hot rolls.", price: 199.9, category: "sushi" },
   { id: "barca-especial", name: "Barca Especial 80 peças", description: "Seleção do sushiman com joy e niguiri maçaricado.", price: 259.9, category: "sushi" },
 
-  // Baurus
-  { id: "bauru-tradicional", name: "Bauru Tradicional", description: "Rosbife, queijo derretido, tomate e orégano.", price: 24.9, category: "baurus" },
-  { id: "bauru-frango", name: "Bauru de Frango", description: "Frango desfiado, catupiry e milho.", price: 26.9, category: "baurus" },
-  { id: "bauru-calabresa", name: "Bauru de Calabresa", description: "Calabresa acebolada com queijo prato.", price: 27.9, category: "baurus" },
-  { id: "bauru-completo", name: "Bauru Completo", description: "Presunto, queijo, ovo, bacon e salada.", price: 32.9, category: "baurus" },
+  // Hambúrgueres
+  { id: "burger-classico", name: "Cheeseburger Clássico", description: "Blend 180g, cheddar, picles e molho da casa no pão brioche.", price: 28.9, category: "hamburgueres" },
+  { id: "burger-bacon", name: "Bacon Burger", description: "Blend 180g, cheddar duplo e bacon crocante.", price: 34.9, category: "hamburgueres" },
+  { id: "burger-salada", name: "Burger Salada", description: "Blend 180g, queijo prato, alface, tomate e maionese verde.", price: 30.9, category: "hamburgueres" },
+  { id: "burger-duplo", name: "Duplo Smash", description: "Dois blends 120g smash, cheddar duplo e cebola caramelizada.", price: 39.9, category: "hamburgueres" },
 
   // Bolos
   { id: "bolo-fatia-chocolate", name: "Fatia de Bolo de Chocolate", description: "Massa fofinha com recheio de brigadeiro.", price: 12.9, category: "bolos" },
@@ -91,7 +91,6 @@ export const addonsByCategory: Record<CategoryId, Addon[]> = {
     { id: "p-borda-cheddar", name: "Borda recheada cheddar", price: 9.9 },
     { id: "p-bacon", name: "Bacon extra", price: 7 },
     { id: "p-mussarela", name: "Dobro de mussarela", price: 8.5 },
-    { id: "p-refri", name: "Coca-Cola 2L", price: 14.9 },
   ],
   acai: [
     { id: "a-granola", name: "Granola", price: 3 },
@@ -108,11 +107,12 @@ export const addonsByCategory: Record<CategoryId, Addon[]> = {
     { id: "s-cream", name: "Cream cheese extra", price: 6 },
     { id: "s-hashi", name: "Hashi adicional", price: 1.5 },
   ],
-  baurus: [
-    { id: "b-queijo", name: "Queijo extra", price: 4.5 },
-    { id: "b-bacon", name: "Bacon", price: 6 },
-    { id: "b-ovo", name: "Ovo", price: 3 },
-    { id: "b-batata", name: "Batata palha", price: 2.5 },
+  hamburgueres: [
+    { id: "h-bacon", name: "Bacon extra", price: 6.5 },
+    { id: "h-cheddar", name: "Cheddar cremoso", price: 5 },
+    { id: "h-blend", name: "Blend extra 180g", price: 13 },
+    { id: "h-fritas", name: "Porção de fritas", price: 14.9 },
+    { id: "h-onion", name: "Onion rings", price: 12.9 },
   ],
   bolos: [
     { id: "c-morango", name: "Cobertura de morango", price: 8.9 },
@@ -121,6 +121,20 @@ export const addonsByCategory: Record<CategoryId, Addon[]> = {
     { id: "c-mensagem", name: "Mensagem na placa", price: 5.9 },
   ],
 };
+
+/** Bebidas disponíveis em todos os produtos. */
+export const drinks: Addon[] = [
+  { id: "d-coca-600", name: "Coca-Cola 600ml", price: 8.9 },
+  { id: "d-coca-2l", name: "Coca-Cola 2L", price: 14.9 },
+  { id: "d-guarana-600", name: "Guaraná Antarctica 600ml", price: 7.9 },
+  { id: "d-guarana-2l", name: "Guaraná Antarctica 2L", price: 12.9 },
+];
+
+/** Adicionais da categoria + bebidas (disponíveis em todos os produtos). */
+export const getAddons = (category: CategoryId): Addon[] => [
+  ...addonsByCategory[category],
+  ...drinks,
+];
 
 export const formatBRL = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
