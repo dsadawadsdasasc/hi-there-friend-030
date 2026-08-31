@@ -44,7 +44,7 @@ function ProdutoPage() {
     return (
       <div className="mx-auto max-w-2xl px-4 py-20 text-center">
         <h1 className="text-2xl font-bold">Produto não encontrado</h1>
-        <Link to="/" className="mt-4 inline-block text-primary underline">
+        <Link to="/" search={{ tab: "cardapio" }} className="mt-4 inline-block text-primary underline">
           Voltar ao cardápio
         </Link>
       </div>
@@ -69,6 +69,7 @@ function ProdutoPage() {
         <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3">
           <Link
             to="/"
+            search={{ tab: "cardapio" }}
             aria-label="Voltar ao cardápio"
             className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-lg"
           >
