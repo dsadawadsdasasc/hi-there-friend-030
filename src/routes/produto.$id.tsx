@@ -1,0 +1,180 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+
+import { addonsByCategory, categories, formatBRL, menu } from "@/data/menu";
+import { cart, getLine } from "@/lib/cart";
+
+export const Route = createFileRoute("/produto/$id")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    line: typeof search["line"] === "string" ? (search["line"] as string) : undefined,
+  }),
+  head: ({ params }) => {
+    const item = menu.find((m) => m.id === params.id);
+    const title = item ? `${item.name} | Xis do Sul` : "Produto | Xis do Sul";
+    const description = item
+      ? `${item.description} Monte com adicionais e observações. Delivery 24h em Porto Alegre.`
+      : "Produto não encontrado no cardápio do Xis do Sul.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+    };
+  },
+  component: ProdutoPage,
+});
+
+function ProdutoPage() {
+  const { id } = Route.useParams();
+  const { line: lineId } = Route.useSearch();
+  const navigate = useNavigate();
+
+  const item = useMemo(() => menu.find((m) => m.id === id), [id]);
+  const existing = lineId ? getLine(lineId) : null;
+
+  const [qty, setQty] = useState(existing?.qty ?? 1);
+  const [addonIds, setAddonIds] = useState<string[]>(existing?.addonIds ?? []);
+  const [notes, setNotes] = useState(existing?.notes ?? "");
+
+  if (!item) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-20 text-center">
+        <h1 className="text-2xl font-bold">Produto não encontrado</h1>
+        <Link to="/" className="mt-4 inline-block text-primary underline">
+          Voltar ao cardápio
+        </Link>
+      </div>
+    );
+  }
+
+  const addons = addonsByCategory[item.category];
+  const unit =
+    item.price +
+    addons.filter((a) => addonIds.includes(a.id)).reduce((s, a) => s + a.price, 0);
+  const category = categories.find((c) => c.id === item.category);
+
+  const submit = () => {
+    if (existing) cart.update(existing.lineId, { qty, addonIds, notes });
+    else cart.add({ itemId: item.id, qty, addonIds, notes });
+    navigate({ to: "/", search: { tab: "pedido" } });
+  };
+
+  return (
+    <div className="min-h-screen bg-background pb-28 text-foreground">
+      <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
+        <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3">
+          <Link
+            to="/"
+            aria-label="Voltar ao cardápio"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-lg"
+          >
+            ←
+          </Link>
+          <div>
+            <p className="font-bold leading-none">{item.name}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {category?.label} · Aberto 24h
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-3xl px-4">
+        {category && (
+          <img
+            src={category.image}
+            alt={item.name}
+            width={1200}
+            height={800}
+            className="mt-4 h-56 w-full rounded-2xl object-cover md:h-72"
+          />
+        )}
+
+        <h1 className="mt-5 text-2xl font-extrabold tracking-tight">{item.name}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
+        <p className="mt-3 text-xl font-bold">{formatBRL(item.price)}</p>
+
+        <section className="mt-8">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
+            Adicionais
+          </h2>
+          <ul className="mt-3 space-y-2">
+            {addons.map((a) => {
+              const checked = addonIds.includes(a.id);
+              return (
+                <li key={a.id}>
+                  <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-card px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() =>
+                        setAddonIds((prev) =>
+                          checked ? prev.filter((x) => x !== a.id) : [...prev, a.id],
+                        )
+                      }
+                      className="h-4 w-4"
+                    />
+                    <span className="flex-1 text-sm">{a.name}</span>
+                    <span className="text-sm font-semibold">+ {formatBRL(a.price)}</span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
+        <section className="mt-8">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
+            Observações
+          </h2>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            rows={4}
+            maxLength={200}
+            placeholder="Ex.: sem cebola, maionese à parte, ponto da carne..."
+            className="mt-3 w-full rounded-xl border border-border bg-card p-3 text-sm outline-none focus:border-primary"
+          />
+          <p className="mt-1 text-right text-xs text-muted-foreground">
+            {notes.length}/200
+          </p>
+        </section>
+      </main>
+
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 p-3 backdrop-blur">
+        <div className="mx-auto flex max-w-3xl items-center gap-3">
+          <div className="flex items-center gap-3 rounded-full border border-border px-4 py-2.5">
+            <button
+              type="button"
+              aria-label="Diminuir quantidade"
+              onClick={() => setQty((q) => Math.max(1, q - 1))}
+              className="text-lg leading-none"
+            >
+              −
+            </button>
+            <span className="w-5 text-center tabular-nums">{qty}</span>
+            <button
+              type="button"
+              aria-label="Aumentar quantidade"
+              onClick={() => setQty((q) => q + 1)}
+              className="text-lg leading-none"
+            >
+              +
+            </button>
+          </div>
+          <button
+            type="button"
+            onClick={submit}
+            className="flex-1 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground"
+          >
+            {existing ? "Salvar alterações" : "Adicionar"} · {formatBRL(unit * qty)}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
