@@ -7,7 +7,7 @@ import { categories, formatBRL, menu, type CategoryId } from "@/data/menu";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Sabor da Esquina | Xis, pizza, sushi e açaí em Porto Alegre" },
+      { title: "Xis do Sul | Xis, pizza, sushi e açaí em Porto Alegre" },
       {
         name: "description",
         content:
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
       },
       {
         property: "og:title",
-        content: "Sabor da Esquina | Delivery em Porto Alegre",
+        content: "Xis do Sul | Delivery em Porto Alegre",
       },
       {
         property: "og:description",
