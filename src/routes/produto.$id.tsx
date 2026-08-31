@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
-import { addonsByCategory, categories, formatBRL, menu } from "@/data/menu";
+import { addonsByCategory, categories, drinks, formatBRL, getAddons, menu } from "@/data/menu";
 import { cart, getLine } from "@/lib/cart";
 
 export const Route = createFileRoute("/produto/$id")({
@@ -54,7 +54,14 @@ function ProdutoPage() {
   const addons = addonsByCategory[item.category];
   const unit =
     item.price +
-    addons.filter((a) => addonIds.includes(a.id)).reduce((s, a) => s + a.price, 0);
+    getAddons(item.category)
+      .filter((a) => addonIds.includes(a.id))
+      .reduce((s, a) => s + a.price, 0);
+
+  const toggle = (addonId: string) =>
+    setAddonIds((prev) =>
+      prev.includes(addonId) ? prev.filter((x) => x !== addonId) : [...prev, addonId],
+    );
   const category = categories.find((c) => c.id === item.category);
 
   const submit = () => {
@@ -112,16 +119,40 @@ function ProdutoPage() {
                     <input
                       type="checkbox"
                       checked={checked}
-                      onChange={() =>
-                        setAddonIds((prev) =>
-                          checked ? prev.filter((x) => x !== a.id) : [...prev, a.id],
-                        )
-                      }
+                      onChange={() => toggle(a.id)}
                       className="h-4 w-4"
                     />
                     <span className="flex-1 text-sm">{a.name}</span>
                     <span className="text-sm font-semibold">+ {formatBRL(a.price)}</span>
                   </label>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
+        <section className="mt-8">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
+            Bebidas
+          </h2>
+          <ul className="mt-3 grid grid-cols-2 gap-2">
+            {drinks.map((d) => {
+              const checked = addonIds.includes(d.id);
+              return (
+                <li key={d.id}>
+                  <button
+                    type="button"
+                    aria-pressed={checked}
+                    onClick={() => toggle(d.id)}
+                    className={`flex h-full w-full flex-col rounded-xl border px-3 py-3 text-left transition-colors ${
+                      checked ? "border-primary bg-primary/10" : "border-border bg-card"
+                    }`}
+                  >
+                    <span className="text-sm font-medium leading-snug">{d.name}</span>
+                    <span className="mt-1 text-sm font-semibold text-accent">
+                      + {formatBRL(d.price)}
+                    </span>
+                  </button>
                 </li>
               );
             })}
