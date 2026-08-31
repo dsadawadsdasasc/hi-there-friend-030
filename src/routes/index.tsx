@@ -352,7 +352,7 @@ function Index() {
 
       <footer className="border-t border-border">
         <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Sabor da Esquina · Porto Alegre / RS
+          © {new Date().getFullYear()} Xis do Sul · Porto Alegre / RS
         </div>
       </footer>
     </div>
