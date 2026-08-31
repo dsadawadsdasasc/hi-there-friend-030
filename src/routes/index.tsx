@@ -172,7 +172,7 @@ function Index() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/20" />
               <div className="absolute inset-0 flex items-end">
-                <div className="mx-auto w-full max-w-6xl px-4 pb-8">
+                <div className="mx-auto w-full max-w-6xl px-4 pb-4 md:pb-6">
                   <span className="inline-block rounded-full border border-border bg-card/70 px-3 py-1 text-xs font-medium uppercase tracking-widest text-accent">
                     Aberto 24/7 · Porto Alegre
                   </span>
@@ -186,7 +186,7 @@ function Index() {
               </div>
             </section>
 
-            <section className="mx-auto max-w-6xl px-4 py-8">
+            <section className="mx-auto max-w-6xl px-4 pb-8 pt-4 md:pt-6">
               <h2 className="text-2xl font-bold tracking-tight md:text-3xl">Cardápio</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Toque em um produto para abrir a página dele e escolher adicionais e
