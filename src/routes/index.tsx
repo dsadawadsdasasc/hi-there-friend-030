@@ -366,12 +366,10 @@ function Index() {
                 >
                   + Adicionar mais itens
                 </button>
-                <button
-                  type="button"
-                  className="mt-3 w-full rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-                >
-                  Finalizar pedido
-                </button>
+                <p className="mt-3 rounded-2xl border border-border bg-secondary/40 px-4 py-3 text-center text-sm text-muted-foreground">
+                  O pedido é finalizado direto com a gente pelo WhatsApp. Em breve o
+                  botão de contato aparece aqui.
+                </p>
               </div>
             )}
           </section>
