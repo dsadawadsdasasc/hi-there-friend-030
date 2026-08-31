@@ -85,7 +85,7 @@ function Index() {
       <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <a href="#topo" className="text-lg font-extrabold tracking-tight">
-            Sabor <span className="text-primary">da Esquina</span>
+            Xis <span className="text-primary">do Sul</span>
           </a>
           <nav className="hidden gap-6 text-sm text-muted-foreground md:flex">
             <a className="transition-colors hover:text-foreground" href="#cardapio">
@@ -100,9 +100,29 @@ function Index() {
           </nav>
           <a
             href="#pedido"
-            className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            aria-label={`Meu pedido, ${itemCount} ${itemCount === 1 ? "item" : "itens"}`}
+            className="relative inline-flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity hover:opacity-90 sm:h-auto sm:w-auto sm:gap-2 sm:px-4 sm:py-2 sm:text-sm sm:font-semibold"
           >
-            Pedido · {cartLines.reduce((n, l) => n + l.qty, 0)}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+              <path d="M3 6h18" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            <span className="hidden sm:inline">Pedido</span>
+            {itemCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-xs font-bold text-accent-foreground sm:static sm:h-auto sm:min-w-0 sm:bg-transparent sm:px-0 sm:text-primary-foreground">
+                {itemCount}
+              </span>
+            )}
           </a>
         </div>
       </header>
