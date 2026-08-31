@@ -18,13 +18,13 @@ export const Route = createFileRoute("/")({
   }),
   head: () => ({
     meta: [
-      { title: "Xis do Sul | Delivery 24h de xis, pizza, sushi e açaí" },
+      { title: "Cantinho da Gula | Delivery 24h de xis, pizza, sushi e açaí" },
       {
         name: "description",
         content:
           "Delivery aberto 24 horas, 7 dias por semana em Porto Alegre: xis gaúcho, pizza artesanal, barcas de sushi, baurus, bolos e açaí. Frete grátis acima de R$ 60.",
       },
-      { property: "og:title", content: "Xis do Sul | Delivery 24h em Porto Alegre" },
+      { property: "og:title", content: "Cantinho da Gula | Delivery 24h em Porto Alegre" },
       {
         property: "og:description",
         content:
@@ -96,15 +96,23 @@ function Index() {
     <div className="min-h-screen bg-background pb-24 text-foreground">
       <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-          <div>
-            <p className="text-lg font-extrabold leading-none tracking-tight">
-              Xis <span className="text-primary">do Sul</span>
-            </p>
-            <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <button
+            type="button"
+            onClick={() => {
+              setTab("cardapio");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            aria-label="Cantinho da Gula, voltar ao topo do cardápio"
+            className="text-left"
+          >
+            <span className="block text-lg font-extrabold leading-none tracking-tight">
+              Cantinho <span className="text-primary">da Gula</span>
+            </span>
+            <span className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
               <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-accent" />
               Aberto agora · 24 horas, todos os dias
-            </p>
-          </div>
+            </span>
+          </button>
           <button
             type="button"
             onClick={() => setTab("pedido")}
@@ -358,12 +366,10 @@ function Index() {
                 >
                   + Adicionar mais itens
                 </button>
-                <button
-                  type="button"
-                  className="mt-3 w-full rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-                >
-                  Finalizar pedido
-                </button>
+                <p className="mt-3 rounded-2xl border border-border bg-secondary/40 px-4 py-3 text-center text-sm text-muted-foreground">
+                  O pedido é finalizado direto com a gente pelo WhatsApp. Em breve o
+                  botão de contato aparece aqui.
+                </p>
               </div>
             )}
           </section>
@@ -372,7 +378,7 @@ function Index() {
 
       <footer className="border-t border-border">
         <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Xis do Sul · Porto Alegre / RS · Aberto 24 horas
+          © {new Date().getFullYear()} Cantinho da Gula · Porto Alegre / RS · Aberto 24 horas
         </div>
       </footer>
 
