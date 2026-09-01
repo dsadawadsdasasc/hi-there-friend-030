@@ -4,8 +4,10 @@ import acaiImg from "@/assets/cat-acai.jpg";
 import sushiImg from "@/assets/cat-sushi.jpg";
 import burgerImg from "@/assets/cat-burger.jpg";
 import boloImg from "@/assets/cat-bolo.jpg";
+import comboImg from "@/assets/cat-combo.jpg";
 
 export type CategoryId =
+  | "combos"
   | "xis"
   | "pizzas"
   | "acai"
@@ -29,6 +31,7 @@ export const categories: {
   image: string;
   blurb: string;
 }[] = [
+  { id: "combos", label: "Combos", image: comboImg, blurb: "Muita comida por pouco dinheiro." },
   { id: "xis", label: "Xis", image: xisImg, blurb: "Na chapa, pão fresco e muito queijo." },
   { id: "pizzas", label: "Pizzas", image: pizzaImg, blurb: "Massa artesanal fermentada 48h." },
   { id: "acai", label: "Açaí", image: acaiImg, blurb: "Cremoso, batido na hora." },
@@ -37,8 +40,16 @@ export const categories: {
   { id: "bolos", label: "Bolos", image: boloImg, blurb: "Fatia ou inteiro, feitos na casa." },
 ];
 
-/** Preços praticados em delivery (iFood/Rappi) na região de Porto Alegre. */
+/** Preços praticados em delivery (iFood/Rappi) na região de Balneário Camboriú. */
 export const menu: MenuItem[] = [
+  // Combos (promoção)
+  { id: "combo-casal", name: "Combo Casal", description: "2 Xis Salada + 2 refrigerantes 600ml. Serve duas pessoas.", price: 39.9, category: "combos" },
+  { id: "combo-pizza-refri", name: "Combo Pizza + Refri 2L", description: "Pizza grande de mussarela ou calabresa + Guaraná 2L.", price: 44.9, category: "combos" },
+  { id: "combo-burger-fritas", name: "Combo Burger + Fritas", description: "Cheeseburger 180g, porção de fritas e refrigerante 600ml.", price: 29.9, category: "combos" },
+  { id: "combo-sushi", name: "Combo Barca 30 peças", description: "30 peças variadas + 2 refrigerantes 600ml.", price: 79.9, category: "combos" },
+  { id: "combo-acai-familia", name: "Combo Açaí Família", description: "1L de açaí com 4 acompanhamentos + fatia de bolo.", price: 34.9, category: "combos" },
+  { id: "combo-galera", name: "Combo da Galera", description: "2 pizzas grandes + 4 xis + Coca 2L. Serve até 6 pessoas.", price: 99.9, category: "combos" },
+
   // Xis
   { id: "xis-salada", name: "Xis Salada", description: "Hambúrguer 180g, queijo, alface, tomate e maionese da casa.", price: 29.9, category: "xis" },
   { id: "xis-coracao", name: "Xis Coração", description: "Coração de frango na chapa, queijo e salada completa.", price: 39.9, category: "xis" },
@@ -78,6 +89,11 @@ export const menu: MenuItem[] = [
 
 /** Adicionais por categoria, com preço praticado em delivery. */
 export const addonsByCategory: Record<CategoryId, Addon[]> = {
+  combos: [
+    { id: "cb-fritas", name: "Porção de fritas extra", price: 12.9 },
+    { id: "cb-bacon", name: "Bacon extra", price: 6.5 },
+    { id: "cb-sobremesa", name: "Fatia de bolo de chocolate", price: 9.9 },
+  ],
   xis: [
     { id: "x-bacon", name: "Bacon extra", price: 6.5 },
     { id: "x-cheddar", name: "Cheddar cremoso", price: 5 },
