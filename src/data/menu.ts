@@ -210,7 +210,20 @@ export const menu: MenuItem[] = [
   { id: "bolo-cenoura", name: "Bolo de Cenoura com Chocolate", description: "Inteiro 1,2kg, cobertura generosa de chocolate.", price: 59.9, category: "bolos", image: imgBoloCenoura },
   { id: "bolo-ninho-morango", name: "Bolo Ninho com Morango", description: "Inteiro 1,5kg, creme de leite ninho e morangos.", price: 84.9, category: "bolos", image: imgBoloNinhoMorango },
   { id: "bolo-prestigio", name: "Bolo Prestígio", description: "Inteiro 1,2kg, chocolate com recheio de coco.", price: 74.9, category: "bolos", image: imgBoloPrestigio },
+
+  // Bebidas
+  { id: "beb-coca-600", name: "Coca-Cola 600ml", description: "Refrigerante de cola gelado, garrafa 600ml.", price: 8.9, category: "bebidas", image: imgCoca },
+  { id: "beb-coca-zero-600", name: "Coca-Cola Zero 600ml", description: "Cola zero açúcar gelada, garrafa 600ml.", price: 8.9, category: "bebidas", image: imgCocaZero },
+  { id: "beb-coca-2l", name: "Coca-Cola 2L", description: "Refrigerante de cola gelado, garrafa 2 litros.", price: 14.9, category: "bebidas", image: imgCoca },
+  { id: "beb-coca-zero-2l", name: "Coca-Cola Zero 2L", description: "Cola zero açúcar gelada, garrafa 2 litros.", price: 14.9, category: "bebidas", image: imgCocaZero },
+  { id: "beb-guarana-600", name: "Guaraná Antarctica 600ml", description: "Guaraná gelado, garrafa 600ml.", price: 7.9, category: "bebidas", image: imgGuarana },
+  { id: "beb-guarana-zero-600", name: "Guaraná Antarctica Zero 600ml", description: "Guaraná zero açúcar gelado, garrafa 600ml.", price: 7.9, category: "bebidas", image: imgGuaranaZero },
+  { id: "beb-guarana-2l", name: "Guaraná Antarctica 2L", description: "Guaraná gelado, garrafa 2 litros.", price: 12.9, category: "bebidas", image: imgGuarana },
+  { id: "beb-guarana-zero-2l", name: "Guaraná Antarctica Zero 2L", description: "Guaraná zero açúcar gelado, garrafa 2 litros.", price: 12.9, category: "bebidas", image: imgGuaranaZero },
+  { id: "beb-agua-600", name: "Água Mineral 600ml", description: "Água mineral sem gás gelada, 600ml.", price: 4.9, category: "bebidas", image: imgAgua },
+  { id: "beb-agua-2l", name: "Água Mineral 2L", description: "Água mineral sem gás, garrafa 2 litros.", price: 8.9, category: "bebidas", image: imgAgua },
 ];
+
 
 /** Adicionais por categoria, com preço praticado em delivery. */
 export const addonsByCategory: Record<CategoryId, Addon[]> = {
