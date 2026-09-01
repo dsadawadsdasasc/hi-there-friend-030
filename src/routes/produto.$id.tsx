@@ -12,7 +12,7 @@ export const Route = createFileRoute("/produto/$id")({
     const item = menu.find((m) => m.id === params.id);
     const title = item ? `${item.name} | Cantinho da Gula` : "Produto | Cantinho da Gula";
     const description = item
-      ? `${item.description} Monte com adicionais e observações. Delivery 24h em Porto Alegre.`
+      ? `${item.description} Monte com adicionais e observações. Delivery 24h em Balneário Camboriú.`
       : "Produto não encontrado no cardápio do Cantinho da Gula.";
     return {
       meta: [
@@ -120,7 +120,7 @@ function ProdutoPage() {
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggle(a.id)}
-                      className="h-4 w-4"
+                      className="h-4 w-4 accent-primary"
                     />
                     <span className="flex-1 text-sm">{a.name}</span>
                     <span className="text-sm font-semibold">+ {formatBRL(a.price)}</span>

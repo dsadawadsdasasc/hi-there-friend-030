@@ -22,9 +22,9 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Delivery aberto 24 horas, 7 dias por semana em Porto Alegre: xis gaúcho, pizza artesanal, barcas de sushi, baurus, bolos e açaí. Frete grátis acima de R$ 60.",
+          "Delivery aberto 24 horas, 7 dias por semana em Balneário Camboriú: combos baratos, xis gaúcho, pizza artesanal, barcas de sushi, bolos e açaí. Frete grátis acima de R$ 119,90.",
       },
-      { property: "og:title", content: "Cantinho da Gula | Delivery 24h em Porto Alegre" },
+      { property: "og:title", content: "Cantinho da Gula | Delivery 24h em Balneário Camboriú" },
       {
         property: "og:description",
         content:
@@ -67,6 +67,7 @@ function Index() {
         .map((c) => ({
           id: c.id,
           label: c.label,
+          image: c.image,
           items: menu.filter((i) => i.category === c.id),
         }))
         .filter((g) => g.items.length > 0),
@@ -182,7 +183,7 @@ function Index() {
               <div className="absolute inset-0 flex items-end">
                 <div className="mx-auto w-full max-w-6xl px-4 pb-4 md:pb-6">
                   <span className="inline-block rounded-full border border-border bg-card/70 px-3 py-1 text-xs font-medium uppercase tracking-widest text-accent">
-                    Aberto 24/7 · Porto Alegre
+                    Aberto 24/7 · Balneário Camboriú
                   </span>
                   <h1 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight md:text-6xl">
                     Xis, pizza, barca de sushi e bolo na sua porta, a qualquer hora.
@@ -200,6 +201,33 @@ function Index() {
                 Toque em um produto para abrir a página dele e escolher adicionais e
                 observações.
               </p>
+
+              <ul className="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-7">
+                {categories.map((c) => (
+                  <li key={c.id}>
+                    <button
+                      type="button"
+                      onClick={() => setActive(c.id)}
+                      aria-pressed={active === c.id}
+                      className="flex w-full flex-col items-center gap-1.5"
+                    >
+                      <img
+                        src={c.image}
+                        alt={c.label}
+                        width={800}
+                        height={800}
+                        loading="lazy"
+                        className={`h-16 w-16 rounded-full object-cover ring-2 transition-all ${
+                          active === c.id ? "ring-primary" : "ring-transparent"
+                        }`}
+                      />
+                      <span className="w-full truncate text-center text-xs font-medium text-muted-foreground">
+                        {c.label}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
 
               <div className="mt-4 grid grid-cols-3 gap-2 sm:flex sm:flex-wrap">
                 {filters.map((f) => (
@@ -232,19 +260,36 @@ function Index() {
                             to="/produto/$id"
                             params={{ id: item.id }}
                             search={{ line: undefined }}
-                            className="grid h-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 transition-colors hover:border-primary"
+                            className="flex h-full items-center gap-3 rounded-2xl border border-border bg-card p-3 transition-colors hover:border-primary"
                           >
-                            <span className="min-w-0">
+                            <span className="min-w-0 flex-1">
                               <span className="block truncate font-semibold">{item.name}</span>
                               <span className="mt-0.5 line-clamp-2 block text-xs text-muted-foreground">
                                 {item.description}
                               </span>
-                              <span className="mt-1 block text-sm font-bold">
-                                {formatBRL(item.price)}
+                              <span className="mt-1.5 flex items-center gap-2">
+                                <span className="text-base font-bold text-accent">
+                                  {formatBRL(item.price)}
+                                </span>
+                                {group.id === "combos" && (
+                                  <span className="rounded-md bg-primary/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
+                                    Promo
+                                  </span>
+                                )}
                               </span>
                             </span>
-                            <span className="shrink-0 rounded-full bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground">
-                              Montar
+                            <span className="relative shrink-0">
+                              <img
+                                src={group.image}
+                                alt={item.name}
+                                width={800}
+                                height={800}
+                                loading="lazy"
+                                className="h-20 w-20 rounded-xl object-cover"
+                              />
+                              <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-base font-bold leading-none text-primary-foreground shadow-md">
+                                +
+                              </span>
                             </span>
                           </Link>
                         </li>
@@ -259,7 +304,7 @@ function Index() {
               <div className="grid gap-4 md:grid-cols-3">
                 {[
                   { t: "Aberto 24/7", d: "Atendimento 24 horas por dia, todos os dias do ano." },
-                  { t: "Entrega rápida", d: "Média de 40 minutos em Porto Alegre, Canoas e Viamão." },
+                  { t: "Entrega rápida", d: "Média de 40 minutos em Balneário Camboriú e região." },
                   { t: "Pagamento fácil", d: "Pix, cartão na entrega ou dinheiro. Sem taxa escondida." },
                 ].map((c) => (
                   <div key={c.t} className="rounded-2xl border border-border bg-card p-6">
@@ -378,7 +423,7 @@ function Index() {
 
       <footer className="border-t border-border">
         <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Cantinho da Gula · Porto Alegre / RS · Aberto 24 horas
+          © {new Date().getFullYear()} Cantinho da Gula · Balneário Camboriú / SC · Aberto 24 horas
         </div>
       </footer>
 
