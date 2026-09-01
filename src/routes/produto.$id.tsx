@@ -139,17 +139,36 @@ function ProdutoPage() {
               const checked = addonIds.includes(a.id);
               return (
                 <li key={a.id}>
-                  <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-card px-4 py-3">
+                  <label
+                    className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 transition-colors ${
+                      checked ? "border-primary bg-primary/10" : "border-border bg-card"
+                    }`}
+                  >
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggle(a.id)}
-                      className="h-4 w-4 accent-primary"
+                      className="peer sr-only"
                     />
+                    <span
+                      aria-hidden
+                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-colors ${
+                        checked
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-border bg-background"
+                      }`}
+                    >
+                      {checked && (
+                        <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="3">
+                          <path d="M4 10.5l4 4 8-9" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
+                    </span>
                     <span className="flex-1 text-sm">{a.name}</span>
-                    <span className="text-sm font-semibold">+ {formatBRL(a.price)}</span>
+                    <span className="text-sm font-semibold text-accent">+ {formatBRL(a.price)}</span>
                   </label>
                 </li>
+
               );
             })}
           </ul>
