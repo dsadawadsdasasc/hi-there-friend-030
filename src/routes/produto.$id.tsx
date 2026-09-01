@@ -130,7 +130,7 @@ function ProdutoPage() {
         )}
 
 
-        <section className="mt-8">
+        <section className={`mt-8 ${addons.length === 0 ? "hidden" : ""}`}>
           <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
             Adicionais
           </h2>
@@ -155,7 +155,7 @@ function ProdutoPage() {
           </ul>
         </section>
 
-        <section className="mt-8">
+        <section className={`mt-8 ${item.category === "bebidas" ? "hidden" : ""}`}>
           <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
             Bebidas
           </h2>

@@ -52,6 +52,13 @@ import imgBoloCenoura from "@/assets/prod/bolo-cenoura.jpg";
 import imgBoloNinhoMorango from "@/assets/prod/bolo-ninho-morango.jpg";
 import imgBoloPrestigio from "@/assets/prod/bolo-prestigio.jpg";
 
+import bebidasImg from "@/assets/cat-bebidas.jpg";
+import imgCoca from "@/assets/prod/coca.jpg";
+import imgCocaZero from "@/assets/prod/coca-zero.jpg";
+import imgGuarana from "@/assets/prod/guarana.jpg";
+import imgGuaranaZero from "@/assets/prod/guarana-zero.jpg";
+import imgAgua from "@/assets/prod/agua.jpg";
+
 export type CategoryId =
   | "combos"
   | "xis"
@@ -59,7 +66,9 @@ export type CategoryId =
   | "acai"
   | "sushi"
   | "hamburgueres"
-  | "bolos";
+  | "bolos"
+  | "bebidas";
+
 
 export type Addon = { id: string; name: string; price: number };
 
@@ -88,6 +97,7 @@ export const categories: {
   { id: "sushi", label: "Barcas de sushi", image: sushiImg, blurb: "Peças frescas montadas na hora." },
   { id: "hamburgueres", label: "Hambúrgueres", image: burgerImg, blurb: "Blend 180g na chapa, pão brioche." },
   { id: "bolos", label: "Bolos", image: boloImg, blurb: "Fatia ou inteiro, feitos na casa." },
+  { id: "bebidas", label: "Bebidas", image: bebidasImg, blurb: "Geladas, 600ml ou 2L." },
 ];
 
 /** Preços praticados em delivery (iFood/Rappi) na região de Balneário Camboriú. */
@@ -200,7 +210,20 @@ export const menu: MenuItem[] = [
   { id: "bolo-cenoura", name: "Bolo de Cenoura com Chocolate", description: "Inteiro 1,2kg, cobertura generosa de chocolate.", price: 59.9, category: "bolos", image: imgBoloCenoura },
   { id: "bolo-ninho-morango", name: "Bolo Ninho com Morango", description: "Inteiro 1,5kg, creme de leite ninho e morangos.", price: 84.9, category: "bolos", image: imgBoloNinhoMorango },
   { id: "bolo-prestigio", name: "Bolo Prestígio", description: "Inteiro 1,2kg, chocolate com recheio de coco.", price: 74.9, category: "bolos", image: imgBoloPrestigio },
+
+  // Bebidas
+  { id: "beb-coca-600", name: "Coca-Cola 600ml", description: "Refrigerante de cola gelado, garrafa 600ml.", price: 8.9, category: "bebidas", image: imgCoca },
+  { id: "beb-coca-zero-600", name: "Coca-Cola Zero 600ml", description: "Cola zero açúcar gelada, garrafa 600ml.", price: 8.9, category: "bebidas", image: imgCocaZero },
+  { id: "beb-coca-2l", name: "Coca-Cola 2L", description: "Refrigerante de cola gelado, garrafa 2 litros.", price: 14.9, category: "bebidas", image: imgCoca },
+  { id: "beb-coca-zero-2l", name: "Coca-Cola Zero 2L", description: "Cola zero açúcar gelada, garrafa 2 litros.", price: 14.9, category: "bebidas", image: imgCocaZero },
+  { id: "beb-guarana-600", name: "Guaraná Antarctica 600ml", description: "Guaraná gelado, garrafa 600ml.", price: 7.9, category: "bebidas", image: imgGuarana },
+  { id: "beb-guarana-zero-600", name: "Guaraná Antarctica Zero 600ml", description: "Guaraná zero açúcar gelado, garrafa 600ml.", price: 7.9, category: "bebidas", image: imgGuaranaZero },
+  { id: "beb-guarana-2l", name: "Guaraná Antarctica 2L", description: "Guaraná gelado, garrafa 2 litros.", price: 12.9, category: "bebidas", image: imgGuarana },
+  { id: "beb-guarana-zero-2l", name: "Guaraná Antarctica Zero 2L", description: "Guaraná zero açúcar gelado, garrafa 2 litros.", price: 12.9, category: "bebidas", image: imgGuaranaZero },
+  { id: "beb-agua-600", name: "Água Mineral 600ml", description: "Água mineral sem gás gelada, 600ml.", price: 4.9, category: "bebidas", image: imgAgua },
+  { id: "beb-agua-2l", name: "Água Mineral 2L", description: "Água mineral sem gás, garrafa 2 litros.", price: 8.9, category: "bebidas", image: imgAgua },
 ];
+
 
 /** Adicionais por categoria, com preço praticado em delivery. */
 export const addonsByCategory: Record<CategoryId, Addon[]> = {
@@ -251,21 +274,29 @@ export const addonsByCategory: Record<CategoryId, Addon[]> = {
     { id: "c-vela", name: "Kit vela + faca", price: 4.9 },
     { id: "c-mensagem", name: "Mensagem na placa", price: 5.9 },
   ],
+  bebidas: [],
 };
 
-/** Bebidas disponíveis em todos os produtos. */
+/** Bebidas disponíveis como adicional em todos os produtos. */
 export const drinks: Addon[] = [
   { id: "d-coca-600", name: "Coca-Cola 600ml", price: 8.9 },
+  { id: "d-coca-zero-600", name: "Coca-Cola Zero 600ml", price: 8.9 },
   { id: "d-coca-2l", name: "Coca-Cola 2L", price: 14.9 },
+  { id: "d-coca-zero-2l", name: "Coca-Cola Zero 2L", price: 14.9 },
   { id: "d-guarana-600", name: "Guaraná Antarctica 600ml", price: 7.9 },
+  { id: "d-guarana-zero-600", name: "Guaraná Zero 600ml", price: 7.9 },
   { id: "d-guarana-2l", name: "Guaraná Antarctica 2L", price: 12.9 },
+  { id: "d-guarana-zero-2l", name: "Guaraná Zero 2L", price: 12.9 },
+  { id: "d-agua-600", name: "Água Mineral 600ml", price: 4.9 },
+  { id: "d-agua-2l", name: "Água Mineral 2L", price: 8.9 },
 ];
 
-/** Adicionais da categoria + bebidas (disponíveis em todos os produtos). */
-export const getAddons = (category: CategoryId): Addon[] => [
-  ...addonsByCategory[category],
-  ...drinks,
-];
+/** Adicionais da categoria + bebidas (não repete bebidas na própria aba). */
+export const getAddons = (category: CategoryId): Addon[] =>
+  category === "bebidas"
+    ? []
+    : [...addonsByCategory[category], ...drinks];
+
 
 export const formatBRL = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
