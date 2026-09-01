@@ -274,21 +274,29 @@ export const addonsByCategory: Record<CategoryId, Addon[]> = {
     { id: "c-vela", name: "Kit vela + faca", price: 4.9 },
     { id: "c-mensagem", name: "Mensagem na placa", price: 5.9 },
   ],
+  bebidas: [],
 };
 
-/** Bebidas disponíveis em todos os produtos. */
+/** Bebidas disponíveis como adicional em todos os produtos. */
 export const drinks: Addon[] = [
   { id: "d-coca-600", name: "Coca-Cola 600ml", price: 8.9 },
+  { id: "d-coca-zero-600", name: "Coca-Cola Zero 600ml", price: 8.9 },
   { id: "d-coca-2l", name: "Coca-Cola 2L", price: 14.9 },
+  { id: "d-coca-zero-2l", name: "Coca-Cola Zero 2L", price: 14.9 },
   { id: "d-guarana-600", name: "Guaraná Antarctica 600ml", price: 7.9 },
+  { id: "d-guarana-zero-600", name: "Guaraná Zero 600ml", price: 7.9 },
   { id: "d-guarana-2l", name: "Guaraná Antarctica 2L", price: 12.9 },
+  { id: "d-guarana-zero-2l", name: "Guaraná Zero 2L", price: 12.9 },
+  { id: "d-agua-600", name: "Água Mineral 600ml", price: 4.9 },
+  { id: "d-agua-2l", name: "Água Mineral 2L", price: 8.9 },
 ];
 
-/** Adicionais da categoria + bebidas (disponíveis em todos os produtos). */
-export const getAddons = (category: CategoryId): Addon[] => [
-  ...addonsByCategory[category],
-  ...drinks,
-];
+/** Adicionais da categoria + bebidas (não repete bebidas na própria aba). */
+export const getAddons = (category: CategoryId): Addon[] =>
+  category === "bebidas"
+    ? []
+    : [...addonsByCategory[category], ...drinks];
+
 
 export const formatBRL = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
