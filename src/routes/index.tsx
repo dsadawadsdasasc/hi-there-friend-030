@@ -267,7 +267,7 @@ function Index() {
                               <span className="mt-0.5 line-clamp-2 block text-xs text-muted-foreground">
                                 {item.description}
                               </span>
-                              <span className="mt-1.5 flex items-center gap-2">
+                              <span className="mt-1.5 flex flex-wrap items-center gap-1.5">
                                 <span className="text-base font-bold text-accent">
                                   {formatBRL(item.price)}
                                 </span>
@@ -276,17 +276,23 @@ function Index() {
                                     Promo
                                   </span>
                                 )}
+                                {item.price >= FREE_SHIPPING_FROM && (
+                                  <span className="rounded-md bg-accent/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-accent">
+                                    Frete grátis
+                                  </span>
+                                )}
                               </span>
                             </span>
                             <span className="relative shrink-0">
                               <img
-                                src={group.image}
+                                src={item.image}
                                 alt={item.name}
                                 width={800}
                                 height={800}
                                 loading="lazy"
                                 className="h-20 w-20 rounded-xl object-cover"
                               />
+
                               <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-base font-bold leading-none text-primary-foreground shadow-md">
                                 +
                               </span>

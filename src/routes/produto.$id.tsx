@@ -1,7 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
-import { addonsByCategory, categories, drinks, formatBRL, getAddons, menu } from "@/data/menu";
+import {
+  addonsByCategory,
+  categories,
+  drinks,
+  formatBRL,
+  FREE_SHIPPING_FROM,
+  getAddons,
+  menu,
+} from "@/data/menu";
+
 import { cart, getLine } from "@/lib/cart";
 
 export const Route = createFileRoute("/produto/$id")({
@@ -92,19 +101,34 @@ function ProdutoPage() {
       </header>
 
       <main className="mx-auto max-w-3xl px-4">
-        {category && (
-          <img
-            src={category.image}
-            alt={item.name}
-            width={1200}
-            height={800}
-            className="mt-4 h-56 w-full rounded-2xl object-cover md:h-72"
-          />
-        )}
+        <img
+          src={item.image}
+          alt={item.name}
+          width={800}
+          height={800}
+          className="mt-4 h-56 w-full rounded-2xl object-cover md:h-72"
+        />
 
         <h1 className="mt-5 text-2xl font-extrabold tracking-tight">{item.name}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
         <p className="mt-3 text-xl font-bold">{formatBRL(item.price)}</p>
+
+        {item.price >= FREE_SHIPPING_FROM && (
+          <p className="mt-3 inline-block rounded-lg bg-accent/15 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-accent">
+            Inclui frete grátis
+          </p>
+        )}
+
+        {item.category === "combos" && (
+          <div className="mt-4 rounded-xl border border-primary/40 bg-primary/10 p-4">
+            <p className="text-sm font-semibold text-primary">Atenção: escolha os sabores</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Escreva no campo de observações abaixo quais produtos você quer dentro do combo.
+              Ex.: em um combo com 4 hambúrgueres, informe os 4 (bacon, salada, duplo smash...).
+            </p>
+          </div>
+        )}
+
 
         <section className="mt-8">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
