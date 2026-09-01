@@ -72,6 +72,9 @@ export type MenuItem = {
   image: string;
 };
 
+/** Pedidos a partir deste valor ganham frete grátis. */
+export const FREE_SHIPPING_FROM = 119.9;
+
 export const categories: {
   id: CategoryId;
   label: string;
@@ -87,74 +90,71 @@ export const categories: {
   { id: "bolos", label: "Bolos", image: boloImg, blurb: "Fatia ou inteiro, feitos na casa." },
 ];
 
-/** Pedidos a partir deste valor têm frete grátis. */
-export const FREE_SHIPPING_FROM = 119.9;
-
 /** Preços praticados em delivery (iFood/Rappi) na região de Balneário Camboriú. */
 export const menu: MenuItem[] = [
-  // Combos (fartos, 80 a 150 reais)
+  // Combos
   {
     id: "combo-casal",
     name: "Combo Casal",
     description:
-      "2 Xis à escolha + 2 porções de fritas + 2 refrigerantes 600ml. Serve duas pessoas.",
+      "2 Xis à sua escolha + 2 porções de fritas + 2 refrigerantes 600ml. Serve 2 pessoas.",
     price: 89.9,
     category: "combos",
     image: imgComboCasal,
   },
   {
-    id: "combo-acai-familia",
-    name: "Combo Açaí Família",
-    description:
-      "1 açaí de 1L + 2 açaís de 500ml + 4 acompanhamentos + 2 fatias de bolo de chocolate.",
-    price: 84.9,
-    category: "combos",
-    image: imgComboAcaiFamilia,
-  },
-  {
     id: "combo-pizza-dupla",
     name: "Combo Pizza Dupla",
     description:
-      "2 pizzas grandes à escolha + 1 porção de fritas + Coca-Cola 2L. Serve até 4 pessoas.",
+      "2 pizzas grandes à sua escolha + 1 porção de fritas + Coca-Cola 2L. Serve 4 pessoas.",
     price: 109.9,
     category: "combos",
     image: imgComboPizzaDupla,
   },
   {
-    id: "combo-galera",
-    name: "Combo da Galera",
+    id: "combo-acai-familia",
+    name: "Combo Açaí Família",
     description:
-      "4 Xis à escolha + 4 porções de fritas + 2 refrigerantes 2L + 1 açaí de 1L. Serve até 6 pessoas.",
-    price: 119.9,
+      "1 açaí de 1L + 2 açaís de 500ml + 2 fatias de bolo de chocolate. Serve 4 pessoas.",
+    price: 99.9,
     category: "combos",
-    image: imgComboGalera,
+    image: imgComboAcaiFamilia,
   },
   {
     id: "combo-burger-festa",
     name: "Combo Burger Festa",
     description:
-      "4 hambúrgueres à escolha + 4 porções de fritas + 2 refrigerantes 2L + onion rings.",
-    price: 129.9,
+      "4 hambúrgueres à sua escolha + 4 porções de fritas + onion rings + 2 refrigerantes 2L. Serve 4 pessoas.",
+    price: 139.9,
     category: "combos",
     image: imgComboBurgerFesta,
   },
   {
-    id: "combo-mega",
-    name: "Combo Mega Rodada",
+    id: "combo-galera",
+    name: "Combo da Galera",
     description:
-      "2 pizzas grandes + 4 Xis + 2 refrigerantes 2L + 1 bolo inteiro de chocolate. Serve até 8 pessoas.",
-    price: 139.9,
+      "4 Xis à sua escolha + 4 porções de fritas + 2 refrigerantes 2L + 1 açaí de 1L. Serve até 6 pessoas.",
+    price: 119.9,
     category: "combos",
-    image: imgComboMega,
+    image: imgComboGalera,
   },
   {
     id: "combo-sushi",
-    name: "Combo Barca da Casa",
+    name: "Combo Barca Completa",
     description:
-      "Barca de 40 peças + 8 hot rolls extras + 2 refrigerantes 600ml + shoyu e hashi para 4.",
+      "Barca de 40 peças + 8 hot rolls extras + 2 refrigerantes 600ml. Serve 3 pessoas.",
     price: 149.9,
     category: "combos",
     image: imgComboSushi,
+  },
+  {
+    id: "combo-mega",
+    name: "Combo Mega Família",
+    description:
+      "2 pizzas grandes + 4 Xis + 2 refrigerantes 2L + 1 bolo inteiro. Serve até 8 pessoas.",
+    price: 149.9,
+    category: "combos",
+    image: imgComboMega,
   },
 
   // Xis
@@ -168,10 +168,10 @@ export const menu: MenuItem[] = [
   { id: "pizza-calabresa", name: "Pizza Calabresa G", description: "Calabresa fatiada, cebola e azeitona. 8 fatias.", price: 49.9, category: "pizzas", image: imgPizzaCalabresa },
   { id: "pizza-portuguesa", name: "Pizza Portuguesa G", description: "Presunto, ovo, cebola, ervilha e mussarela.", price: 54.9, category: "pizzas", image: imgPizzaPortuguesa },
   { id: "pizza-frango-catupiry", name: "Pizza Frango c/ Catupiry G", description: "Frango desfiado e catupiry cremoso.", price: 56.9, category: "pizzas", image: imgPizzaFrangoCatupiry },
-  { id: "pizza-quatro-queijos", name: "Pizza Quatro Queijos G", description: "Mussarela, provolone, parmesão e gorgonzola.", price: 58.9, category: "pizzas", image: imgPizzaQuatroQueijos },
+  { id: "pizza-quatro-queijos", name: "Pizza Quatro Queijos G", description: "Mussarela, provolone, gorgonzola e parmesão.", price: 58.9, category: "pizzas", image: imgPizzaQuatroQueijos },
   { id: "pizza-pepperoni", name: "Pizza Pepperoni G", description: "Mussarela e fatias generosas de pepperoni.", price: 59.9, category: "pizzas", image: imgPizzaPepperoni },
-  { id: "pizza-bacon-cheddar", name: "Pizza Bacon c/ Cheddar G", description: "Cheddar cremoso, bacon crocante e cebola roxa.", price: 61.9, category: "pizzas", image: imgPizzaBaconCheddar },
-  { id: "pizza-chocolate", name: "Pizza de Chocolate G", description: "Chocolate ao leite com morangos frescos. 8 fatias.", price: 49.9, category: "pizzas", image: imgPizzaChocolate },
+  { id: "pizza-bacon-cheddar", name: "Pizza Bacon c/ Cheddar G", description: "Cheddar cremoso, bacon crocante e cebola roxa.", price: 59.9, category: "pizzas", image: imgPizzaBaconCheddar },
+  { id: "pizza-chocolate", name: "Pizza de Chocolate G", description: "Chocolate ao leite com morango. 8 fatias doces.", price: 49.9, category: "pizzas", image: imgPizzaChocolate },
 
   // Açaí
   { id: "acai-300", name: "Açaí 300ml", description: "Açaí cremoso com dois acompanhamentos.", price: 16.9, category: "acai", image: imgAcai300 },
@@ -190,10 +190,10 @@ export const menu: MenuItem[] = [
   { id: "burger-bacon", name: "Bacon Burger", description: "Blend 180g, cheddar duplo e bacon crocante.", price: 34.9, category: "hamburgueres", image: imgBurgerBacon },
   { id: "burger-salada", name: "Burger Salada", description: "Blend 180g, queijo prato, alface, tomate e maionese verde.", price: 30.9, category: "hamburgueres", image: imgBurgerSalada },
   { id: "burger-duplo", name: "Duplo Smash", description: "Dois blends 120g smash, cheddar duplo e cebola caramelizada.", price: 39.9, category: "hamburgueres", image: imgBurgerDuplo },
-  { id: "burger-cheddar", name: "Cheddar Melt", description: "Blend 180g mergulhado em cheddar cremoso e cebola crispy.", price: 37.9, category: "hamburgueres", image: imgBurgerCheddar },
+  { id: "burger-cheddar", name: "Cheddar Melt", description: "Blend 180g afogado no cheddar cremoso com cebola crispy.", price: 36.9, category: "hamburgueres", image: imgBurgerCheddar },
   { id: "burger-frango", name: "Chicken Crispy", description: "Filé de frango empanado, alface americana e molho ranch.", price: 32.9, category: "hamburgueres", image: imgBurgerFrango },
-  { id: "burger-costela", name: "Costela BBQ", description: "Costela desfiada 200g, cheddar e molho barbecue defumado.", price: 42.9, category: "hamburgueres", image: imgBurgerCostela },
-  { id: "burger-veggie", name: "Veggie da Casa", description: "Burger de grão-de-bico, queijo, rúcula e maionese de ervas.", price: 31.9, category: "hamburgueres", image: imgBurgerVeggie },
+  { id: "burger-costela", name: "Costela BBQ", description: "Costela desfiada, cheddar e molho barbecue defumado.", price: 42.9, category: "hamburgueres", image: imgBurgerCostela },
+  { id: "burger-veggie", name: "Veggie Burger", description: "Hambúrguer de grão-de-bico, queijo, rúcula e maionese de ervas.", price: 31.9, category: "hamburgueres", image: imgBurgerVeggie },
 
   // Bolos
   { id: "bolo-fatia-chocolate", name: "Fatia de Bolo de Chocolate", description: "Massa fofinha com recheio de brigadeiro.", price: 12.9, category: "bolos", image: imgBoloFatiaChocolate },
