@@ -52,6 +52,13 @@ import imgBoloCenoura from "@/assets/prod/bolo-cenoura.jpg";
 import imgBoloNinhoMorango from "@/assets/prod/bolo-ninho-morango.jpg";
 import imgBoloPrestigio from "@/assets/prod/bolo-prestigio.jpg";
 
+import bebidasImg from "@/assets/cat-bebidas.jpg";
+import imgCoca from "@/assets/prod/coca.jpg";
+import imgCocaZero from "@/assets/prod/coca-zero.jpg";
+import imgGuarana from "@/assets/prod/guarana.jpg";
+import imgGuaranaZero from "@/assets/prod/guarana-zero.jpg";
+import imgAgua from "@/assets/prod/agua.jpg";
+
 export type CategoryId =
   | "combos"
   | "xis"
@@ -59,7 +66,9 @@ export type CategoryId =
   | "acai"
   | "sushi"
   | "hamburgueres"
-  | "bolos";
+  | "bolos"
+  | "bebidas";
+
 
 export type Addon = { id: string; name: string; price: number };
 
