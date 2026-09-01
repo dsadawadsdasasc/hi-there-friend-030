@@ -97,6 +97,7 @@ export const categories: {
   { id: "sushi", label: "Barcas de sushi", image: sushiImg, blurb: "Peças frescas montadas na hora." },
   { id: "hamburgueres", label: "Hambúrgueres", image: burgerImg, blurb: "Blend 180g na chapa, pão brioche." },
   { id: "bolos", label: "Bolos", image: boloImg, blurb: "Fatia ou inteiro, feitos na casa." },
+  { id: "bebidas", label: "Bebidas", image: bebidasImg, blurb: "Geladas, 600ml ou 2L." },
 ];
 
 /** Preços praticados em delivery (iFood/Rappi) na região de Balneário Camboriú. */
